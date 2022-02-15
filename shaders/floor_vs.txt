@@ -1,0 +1,28 @@
+#version 330
+
+layout (location = 0) in vec3 vertex_position;
+layout (location = 1) in vec3 vertex_normal;
+layout (location = 2) in vec2 vertex_texture;
+
+out vec3 vertex_inWorldSpace;
+out vec3 tnorm;
+out mat3 normalMatrix;
+out vec2 TexCoord;
+
+uniform mat4 view;
+uniform mat4 proj;
+uniform mat4 model;
+
+void main()
+{
+	TexCoord = vertex_texture;
+
+	vertex_inWorldSpace = vec3(model * vec4(vertex_position, 1.0));
+
+	mat4 ModelViewMatrix = view * model;
+	mat3 NormalMatrix =  mat3(ModelViewMatrix);
+
+	tnorm = normalize( NormalMatrix * vertex_normal);
+
+	gl_Position = proj * view * vec4(vertex_inWorldSpace, 1.0);
+}

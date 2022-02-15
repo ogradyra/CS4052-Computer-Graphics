@@ -1,0 +1,326 @@
+	// draw particles
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	glUseProgram(particleID);
+
+	int proj_particle_loc = glGetUniformLocation(particleID, "proj");
+	int view_particle_loc = glGetUniformLocation(particleID, "view");
+	int color_loc = glGetUniformLocation(particleID, "color");
+	int offset_loc = glGetUniformLocation(particleID, "offset");
+
+	// create new particles
+	for (unsigned int i = 0; i < nr_new_particles; ++i)
+	{
+		int unusedParticle = firstUnusedParticle();
+		respawnParticle(particles[unusedParticle], offset);
+	}
+
+	// update all particles
+	for (unsigned int i = 0; i < nr_particles; ++i)
+	{
+		Particle& p = particles[i];
+		p.life -= dt; // reduce life
+
+		if (p.life > 0.0f)
+		{	// particle is alive, thus update
+			p.position.y += p.velocity.y * dt;
+			p.color.a -= dt * 2.5f;
+
+			glUniformMatrix4fv(proj_particle_loc, 1, GL_FALSE, glm::value_ptr(persp_proj));
+			glUniformMatrix4fv(view_particle_loc, 1, GL_FALSE, glm::value_ptr(view));
+			glUniform4fv(color_loc, 1, glm::value_ptr(p.color));
+			glUniform2fv(offset_loc, 1, glm::value_ptr(p.position));
+
+			cout << "particle color " << p.color.x << ", " << p.color.y << ", " << p.color.z << endl;
+			cout << "particle position " << p.position.y << endl;
+			cout << "particle life " << p.life << endl;
+			cout << "particle velocity " << p.velocity.y  << endl;
+
+			glActiveTexture(GL_TEXTURE5);
+			glBindTexture(GL_TEXTURE_2D, textures[5]);
+
+			glBindVertexArray(particle_vao);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+			glBindVertexArray(0);
+
+		}
+	}
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
+	float particle_quad[] = {
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 0.0f,
+
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f
+	};
+
+	glGenVertexArrays(1, &particle_vao);
+	glGenBuffers(1, &particle_vbo);
+	glBindVertexArray(particle_vao);
+	// fill mesh buffer
+	glBindBuffer(GL_ARRAY_BUFFER, particle_vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(particle_quad), &particle_quad, GL_STATIC_DRAW);
+	// set mesh attributes
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+
+	for (unsigned int i = 0; i < nr_particles; ++i) particles.push_back(Particle());
+
+	unsigned int firstUnusedParticle()
+{
+	// first search from last used particle, this will usually return almost instantly
+	for (unsigned int i = lastUsedParticle; i < nr_particles; ++i) {
+		if (particles[i].life <= 0.0f) {
+			lastUsedParticle = i;
+			return i;
+		}
+	}
+	// otherwise, do a linear search
+	for (unsigned int i = 0; i < lastUsedParticle; ++i) {
+		if (particles[i].life <= 0.0f) {
+			lastUsedParticle = i;
+			return i;
+		}
+	}
+	// all particles are taken, override the first one (note that if it repeatedly hits this case, more particles should be reserved)
+	lastUsedParticle = 0;
+	return 0;
+}
+
+void respawnParticle(Particle& particle, glm::vec3 offset)
+{
+	glm::vec3 lightColor;
+	lightColor.y = sin(timeGetTime() * 0.9f);
+	lightColor.z = sin(timeGetTime() * 0.02f);
+
+	float rColor = 0.5f + ((rand() % 100) / 100.0f);
+	particle.position = glm::vec3(0.0f);
+	particle.color = glm::vec4(0.7f, lightColor.y, lightColor.z, 1.0f);
+	particle.life = 1.0f;
+	particle.velocity = glm::vec3(1.0f);
+}
+
+
+if (tx1 < tx2 <= tx1 + 10.0f && tz1 - 10.0f < tz2 < tz1 + 10.0f) {
+
+		if (170.0f < rb2 <= 270.0f) {
+			
+			rb2 -= 10.0f;
+
+			increment_x = 0.5f * sin(glm::radians(rb2));
+			increment_z = 0.5f * cos(glm::radians(rb2));
+
+			tx2 += increment_x;
+			tz2 += increment_z;
+		}
+
+		else if (270.0f <= rb2 < 360.0f || 0.0f <= rb2 < 10.0f) {
+			
+			rb2 += 10.0f;
+
+			increment_x = 0.5f * sin(glm::radians(rb2));
+			increment_z = 0.5f * cos(glm::radians(rb2));
+
+			tx2 += increment_x;
+			tz2 += increment_z;
+		}
+
+		else {
+			increment_x = 1.0f * sin(glm::radians(rb2));
+			increment_z = 1.0f * cos(glm::radians(rb2));
+
+			tx2 += increment_x;
+			tz2 += increment_z;
+		}
+	}
+
+
+	if (tx1 - 10.0f <= tx2 < tx1 && tz2 < tz1 + 10.0f && tz2 > tz1 - 10.0f) {
+
+		if (90.0f < rb2 <= 190.0f) {
+
+			rb2 -= 10.0f;
+
+			increment_x = 0.5f * sin(glm::radians(rb2));
+			increment_z = 0.5f * cos(glm::radians(rb2));
+
+			tx2 += increment_x;
+			tz2 += increment_z;
+		}
+
+		else if (0.0f < rb2 <= 90.0f || 350.0f <= rb2 < 360.0f) {
+
+			rb2 += 10.0f;
+
+			increment_x = 0.5f * sin(glm::radians(rb2));
+			increment_z = 0.5f * cos(glm::radians(rb2));
+
+			tx2 += increment_x;
+			tz2 += increment_z;
+		}
+
+		else {
+			increment_x = 1.0f * sin(glm::radians(rb2));
+			increment_z = 1.0f * cos(glm::radians(rb2));
+
+			tx2 += increment_x;
+			tz2 += increment_z;
+		}
+
+	}
+
+
+	if (tz1 < tz2 < tz1 + 10.0f && tx2 < tx1 + 10.0f && tx2 > tx1 - 10.0f) {
+
+		if (0.0f <= rb2 < 100.0f) {
+
+			rb2 -= 10.0f;
+
+			increment_x = 0.5f * sin(glm::radians(rb2));
+			increment_z = 0.5f * cos(glm::radians(rb2));
+
+			tx2 += increment_x;
+			tz2 += increment_z;
+		}
+
+		else if (260.0f <= rb2 < 360.0f) {
+
+			rb2 += 10.0f;
+
+			increment_x = 0.5f * sin(glm::radians(rb2));
+			increment_z = 0.5f * cos(glm::radians(rb2));
+
+			tx2 += increment_x;
+			tz2 += increment_z;
+		}
+
+		else {
+			increment_x = 1.0f * sin(glm::radians(rb2));
+			increment_z = 1.0f * cos(glm::radians(rb2));
+
+			tx2 += increment_x;
+			tz2 += increment_z;
+		}
+
+	}
+
+
+	if (tz1 - 10.0f <= tz2 < tz1 && tx2 < tx1 + 10.0f && tx2 > tx1 - 10.0f) {
+
+		if (180.0f < rb2 <= 280.0f) {
+
+			rb2 -= 10.0f;
+
+			increment_x = 0.5f * sin(glm::radians(rb2));
+			increment_z = 0.5f * cos(glm::radians(rb2));
+
+			tx2 += increment_x;
+			tz2 += increment_z;
+		}
+
+		else if (180.0f <= rb2 < 80.0f) {
+
+			rb2 += 10.0f;
+
+			increment_x = 0.5f * sin(glm::radians(rb2));
+			increment_z = 0.5f * cos(glm::radians(rb2));
+
+			tx2 += increment_x;
+			tz2 += increment_z;
+		}
+
+		else {
+			increment_x = 1.0f * sin(glm::radians(rb2));
+			increment_z = 1.0f * cos(glm::radians(rb2));
+
+			tx2 += increment_x;
+			tz2 += increment_z;
+		}
+
+	}
+
+
+	if (d <= 10.0f) {
+
+		GLfloat r_diff = rb2 - rb1;
+
+		if (70.0f <= abs(r_diff) < 155.0f) {
+
+			if (tz2 > tz1) {
+				rb2 -= 20.0f;
+
+				increment_x = 0.75f * sin(glm::radians(rb2));
+				increment_z = 0.75f * cos(glm::radians(rb2));
+
+				tx2 += increment_x;
+				tz2 += increment_z;
+			}
+
+			else {
+				
+				increment_x = 0.75f * sin(glm::radians(rb2));
+				increment_z = 0.75f * cos(glm::radians(rb2));
+
+				tx2 += increment_x;
+				tz2 += increment_z;
+			}
+
+		}
+
+		else if (0.0f <= abs(r_diff) < 90.0f) {
+			
+			increment_x = 0.75f * sin(glm::radians(rb2));
+			increment_z = 0.75f * cos(glm::radians(rb2));
+
+			tx2 += increment_x;
+			tz2 += increment_z;
+		}
+
+		else if (200.0f <= abs(r_diff) < 280.0f) {
+
+			if (tz2 > tz1) {
+				rb2 += 20.0f;
+
+				increment_x = 0.75f * sin(glm::radians(rb2));
+				increment_z = 0.75f * cos(glm::radians(rb2));
+
+				tx2 += increment_x;
+				tz2 += increment_z;
+			}
+
+			else {
+				
+				increment_x = 1.0f * sin(glm::radians(rb2));
+				increment_z = 1.0f * cos(glm::radians(rb2));
+
+				tx2 += increment_x;
+				tz2 += increment_z;
+			}
+				
+		}
+
+		else {
+
+			if (increment_r2 < 180.0f) {
+				increment_r2 += 20.0f;
+				rb2 += increment_r2;
+			}
+
+			else {
+				increment_r2 = 0;
+
+				increment_x = 0.75f * sin(glm::radians(rb2));
+				increment_z = 0.75f * cos(glm::radians(rb2));
+
+				tx2 += increment_x;
+				tz2 += increment_z;
+			}
+
+		}
+
+	}

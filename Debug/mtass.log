@@ -1,0 +1,7 @@
+﻿  main.cpp
+C:\Users\aogra\Desktop\mtass\mtass\structs.h(73,2): warning C4091: 'typedef ': ignored on left of 'Particle' when no variable is declared
+C:\Users\aogra\Desktop\mtass\mtass\main.cpp(679,11): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\aogra\Desktop\mtass\mtass\main.cpp(680,11): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\aogra\Desktop\mtass\mtass\main.cpp(686,10): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\aogra\Desktop\mtass\mtass\main.cpp(687,10): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  mtass.vcxproj -> C:\Users\aogra\Desktop\mtass\Debug\mtass.exe

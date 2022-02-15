@@ -1,0 +1,30 @@
+#version 330 core
+
+out vec4 FragColor;
+
+in vec3 LightIntensity;
+in vec2 TexCoord;
+
+uniform vec3 lightColor;
+
+uniform sampler2D moon_tex;
+uniform sampler2D fire_tex;
+
+uniform int tex_num;
+
+vec4 texel;
+
+void main()
+{
+
+    if (tex_num == 4){
+        texel = texture(moon_tex, TexCoord);
+    }
+
+    else if (tex_num == 5){
+        texel = texture(fire_tex, TexCoord);
+    }
+        
+    FragColor = texel * vec4(lightColor, 1.0);
+    
+}

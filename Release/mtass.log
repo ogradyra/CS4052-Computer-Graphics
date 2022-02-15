@@ -1,0 +1,10 @@
+﻿  main.cpp
+C:\Users\aogra\Desktop\rachcode\midterm\tut_opl\main.cpp(433,17): warning C4305: '+=': truncation from 'double' to 'GLfloat'
+C:\Users\aogra\Desktop\rachcode\midterm\tut_opl\main.cpp(434,17): warning C4305: '+=': truncation from 'double' to 'GLfloat'
+C:\Users\aogra\Desktop\rachcode\midterm\tut_opl\main.cpp(435,17): warning C4305: '+=': truncation from 'double' to 'GLfloat'
+  Generating code
+  2 of 183 functions ( 1.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  mtass.vcxproj -> C:\Users\aogra\Desktop\mtass\Release\mtass.exe
